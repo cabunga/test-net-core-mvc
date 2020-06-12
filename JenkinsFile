@@ -1,0 +1,43 @@
+pipeline {
+  agent {
+        label 'local'
+    }
+
+  stages {
+    stage('Checkout') {
+     steps {
+      git credentialsId: 'userId', url: 'https://github.com/cabunga/test-net-core-mvc.git', branch: 'master'
+     }
+    }
+   
+   
+   stage ('Restore PACKAGES') {     
+         steps {
+             
+              sh "dotnet restore "
+          }
+        }
+    stage('Clean') {
+      steps {
+          
+            sh 'dotnet clean'
+       }
+    }
+    stage("Build"){
+        steps{
+            
+            sh 'dotnet build'
+        }
+        
+    }    
+    
+ 
+    stage('Pack') {
+     steps {
+        
+           sh 'dotnet pack --no-build --output nupkgs'
+      }
+   }
+    
+ }
+}
